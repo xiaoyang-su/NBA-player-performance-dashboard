@@ -1,0 +1,22 @@
+﻿# Tableau temporary files
+*.tmp
+*.log
+*.tfl.lock
+*.hyper.lock
+
+# Python / Environment
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Large data files (Optional: keep large raw extracts out of git if >100MB)
+# data/raw/*.csv
+# data/raw/*.zip
