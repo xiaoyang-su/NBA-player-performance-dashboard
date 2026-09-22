@@ -26,7 +26,7 @@ Interactive filters allow selection by **Season** and **Player**. Clicking a mar
 Evaluate predictive performance and identify the statistical features most associated with modeled playoff impact.
 
 - **Normalized Feature Importance (%)** — Horizontal bar chart showing the relative contribution of each model feature to BPM predictions. Features are color-coded by category (Shooting Efficiency, Defense, Playmaking, Offensive Load, Discipline, Rebounding, Ball Security, Position). Top drivers include True Shooting % (27.18%), Field Goal % (14.28%), Steal % (11.65%), and Assist % (10.45%).
-- **Actual vs. Predicted BPM** — Scatter plot of true BPM against XGBoost-predicted BPM. Points closer to the diagonal indicate more accurate predictions. Color encodes Feature Group; shape encodes Error Category (Above Prediction, Below Prediction, Near Prediction). Model summary: XGBoost, 5-fold cross-validation, R² = 0.90, unit of analysis is player-season.
+- **Actual vs. Predicted BPM** — Scatter plot of true BPM against XGBoost-predicted BPM. Points closer to the diagonal indicate more accurate predictions. Color encodes prediction error category (Above Prediction, Below Prediction, Near Prediction). Model summary: XGBoost, 5-fold cross-validation, R² = 0.90, unit of analysis is player-season.
 
 Navigation buttons at the top of each view allow switching between the Player Impact Explorer and Model Diagnostics pages.
 
@@ -59,7 +59,7 @@ NBA-player-performance-dashboard/
 ## How to Use
 
 ### Online
-Open the published workbook on Tableau Public (link coming soon) in any modern browser. No installation required.
+Open the published workbook on Tableau Public ([Tableau](https://public.tableau.com/app/profile/sunny.su3199/viz/NBA-player-performance-dashboard/NBAPlayoffPlayerImpactExplorer)) in any modern browser. No installation required.
 
 ### Local
 1. Clone this repository:
