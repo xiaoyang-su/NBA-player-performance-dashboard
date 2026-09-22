@@ -1,8 +1,12 @@
-﻿# Tableau temporary files
+# Tableau temporary / recovery files
 *.tmp
 *.log
 *.tfl.lock
 *.hyper.lock
+~*.twbr
+
+# Project design notes (not for commit)
+Outline.md
 
 # Python / Environment
 __pycache__/

@@ -1,68 +1,46 @@
-﻿# NBA Playoff Performance and Impact Dashboard
+# NBA Playoff Player Impact Dashboard
 
-A Tableau-based interactive visualization suite designed to analyze NBA playoff performance, player efficiency, and impact metrics. This dashboard complements the machine learning research on playoff Box Plus/Minus (BPM) estimation, translating complex statistical modeling and multidimensional player tracking data into intuitive visual analytics.
+An interactive Tableau dashboard that visualizes NBA playoff player performance, workload-efficiency trade-offs, and machine learning model diagnostics. Built as a companion to an [XGBoost-based BPM prediction study](https://github.com/xiaoyang-su/NBA-playoff-data-analysis), this project translates statistical modeling results into explorable visual analytics.
 
----
-
-## Overview
-
-Quantifying player performance in the NBA playoffs presents unique challenges due to heightened defensive intensity, shortened rotations, and strategic game planning. Traditional box-score metrics often fail to capture true court impact and efficiency trade-offs.
-
-This interactive Tableau dashboard bridges statistical research and visual analytics. It enables users to explore:
-- Player workload vs. scoring efficiency (Usage Rate vs. True Shooting Percentage vs. Box Plus/Minus).
-- Historical playoff impact distributions and longitudinal player trajectories (e.g., LeBron James, Derrick Rose).
-- Feature relationships identified through machine learning models (XGBoost, Random Forest) for playoff BPM estimation.
+![Dashboard Demo](Dashboard.gif)
 
 ---
 
-## Research Context
+## Dashboard Views
 
-This dashboard visualizes data and findings associated with the following study:
+The workbook contains two linked views with cross-navigation between player analytics and model diagnostics.
 
-> Xiaoyang Su, Yanming Li, Yiheng Chen, and Xiangyu Huang. *From Player Tracking Data to Impact Quantification: An XGBoost Framework for Playoff BPM Estimation.* In **ICCDE 2026: 2026 12th International Conference on Computing and Data Engineering**, 2026. [DOI: 10.1145/3801839.3801860](https://doi.org/10.1145/3801839.3801860)
+### NBA Playoff Player Impact Explorer
 
-The accompanying Python modeling repository can be found at [NBA-playoff-data-analysis](https://github.com/yourusername/NBA-playoff-data-analysis).
+Explore how workload, efficiency, offensive/defensive impact, and career performance vary across NBA playoff players.
 
----
+- **Usage vs. Overall Impact** — Scatter plot of Usage Rate (USG%) against Box Plus/Minus (BPM). Bubble size reflects playing time; color reflects scoring efficiency (True Shooting %). Reveals which players sustain high-volume roles while maintaining positive impact.
+- **Offensive vs. Defensive Impact** — Scatter plot comparing Offensive BPM (OBPM) and Defensive BPM (DBPM) across all filtered player-seasons. Identifies two-way contributors versus one-dimensional players.
+- **Selected Player Career Trajectory** — Dual-axis line chart tracking a selected player's BPM and True Shooting % across playoff seasons. Highlights career arcs, peak windows, and decline patterns.
+- **Selected Player vs. League Average** — Horizontal bar chart comparing the selected player's advanced metrics (Assist %, Block %, Steal %, Total Rebound %, True Shooting %) against the league-average benchmark for the chosen season.
 
-## Live Dashboard
+Interactive filters allow selection by **Season** and **Player**. Clicking a mark in the scatter plots updates the career trajectory and comparison panels.
 
-<!-- - **Tableau Public URL**: [View Interactive Dashboard](https://public.tableau.com/) *(Add your published workbook link here)*
-- **Tableau Desktop File**: Located in `tableau/nba_playoff_dashboard.twbx` -->
+### Model Diagnostics & Explainability
 
----
+Evaluate predictive performance and identify the statistical features most associated with modeled playoff impact.
 
-## Dashboard Views and Features
+- **Normalized Feature Importance (%)** — Horizontal bar chart showing the relative contribution of each model feature to BPM predictions. Features are color-coded by category (Shooting Efficiency, Defense, Playmaking, Offensive Load, Discipline, Rebounding, Ball Security, Position). Top drivers include True Shooting % (27.18%), Field Goal % (14.28%), Steal % (11.65%), and Assist % (10.45%).
+- **Actual vs. Predicted BPM** — Scatter plot of true BPM against XGBoost-predicted BPM. Points closer to the diagonal indicate more accurate predictions. Color encodes Feature Group; shape encodes Error Category (Above Prediction, Below Prediction, Near Prediction). Model summary: XGBoost, 5-fold cross-validation, R² = 0.90, unit of analysis is player-season.
 
-### 1. Player Playoff Profile and Core Metrics
-- Comprehensive player card displaying traditional and advanced metrics: Points, Rebounds, Assists, Minutes per Game, and Box Plus/Minus (`BPM`).
-- Position-adjusted percentiles across offensive and defensive rating metrics.
-- Multi-season filtering (1980–present) with criteria matching the research sample (minimum 3 minutes per game and 2 games played).
-
-### 2. Efficiency and Workload Landscape (USG% vs. TS% vs. BPM)
-- Scatter and contour plots exploring the relationship between Usage Rate (`USG%`) and True Shooting Percentage (`TS%`).
-- Dynamic color encoding by overall BPM and Defensive BPM (`DBPM`), showing how high-volume offensive anchors balance scoring efficiency.
-- Interactive threshold lines highlighting league-average true shooting and replacement-level thresholds.
-
-### 3. Longitudinal Trajectories and Case Studies
-- Multi-year playoff performance tracking for marquee players (e.g., LeBron James' 15+ playoff runs).
-- Visualizing peak vs. twilight playoff runs, workload spikes, and clutch efficiency variances.
-- Head-to-head comparison tool allowing side-by-side metric normalization across eras and positions.
-
-### 4. Machine Learning Insights and Metric Importance
-- Visual presentation of regression findings from the companion XGBoost study (test R² = 0.9000).
-- Variable importance ranking across key features: `pos`, `usg_pct`, `ts_pct`, `ast_pct`, `tov_pct`, `orb_pct`, `drb_pct`, `blk_pct`, `stl_pct`, `pf_per_g`.
-- Comparison of single-variable baseline predictions against full multi-feature models.
+Navigation buttons at the top of each view allow switching between the Player Impact Explorer and Model Diagnostics pages.
 
 ---
 
-## Data and Preprocessing
+## Data
 
-The underlying dataset is derived from historical NBA playoff records spanning 1950 to 2022:
-- **Raw Source**: `playoffStats.csv` (10,648 player-season records, 51 statistical attributes).
-- **Study Filter**: Post-1980 modern era (introduction of the 3-point line), filtered to players with `mp_per_g > 3` and `g > 2`.
-- **Target Variable**: Box Plus/Minus (`bpm`), a box-score-based metric estimating a basketball player's on-court contribution per 100 possessions relative to a league-average player.
-- **Data Pipeline**: Cleaned, transformed, and aggregated using Python (`pandas`, `numpy`) before import into Tableau Data Extracts (`.hyper`).
+The underlying dataset covers NBA playoff records from 1950 to 2022:
+
+- **Source**: `playoffStats.csv` — 10,648 player-season records with 51 statistical attributes, sourced from Basketball Reference.
+- **Filter**: Post-1980 modern era, players with more than 3 minutes per game and more than 2 games played.
+- **Target variable**: Box Plus/Minus (BPM) — a box-score-based metric estimating a player's contribution per 100 possessions relative to league average.
+- **Model features**: `pos`, `usg_pct`, `fg_pct`, `fg3_pct`, `ft_pct`, `ast_pct`, `tov_pct`, `orb_pct`, `drb_pct`, `blk_pct`, `stl_pct`, `pf_per_g`, `ts_pct`. Position is one-hot encoded; all others are numeric pass-through.
+- **Preprocessing pipeline**: Data cleaning and XGBoost prediction export handled in the [companion repository](https://github.com/xiaoyang-su/NBA-playoff-data-analysis) (`src/visualization/export_tableau_data.py`).
 
 ---
 
@@ -70,56 +48,47 @@ The underlying dataset is derived from historical NBA playoff records spanning 1
 
 ```text
 NBA-player-performance-dashboard/
-├── data/
-│   ├── raw/                 # Original playoff statistics extracts
-│   └── processed/           # Aggregated CSVs optimized for Tableau connection
-├── tableau/
-│   └── nba_playoff_dashboard.twbx   # Packaged Tableau Workbook
-├── assets/
-│   ├── overview.png         # Main dashboard screenshot
-│   ├── usg_ts_scatter.png   # Workload vs efficiency view screenshot
-│   └── comparison.png       # Head-to-head comparison view screenshot
+├── NBA-player-performance-dashboard.twbx   # Packaged Tableau workbook (data + views)
+├── Dashboard.gif                           # Animated walkthrough of dashboard interaction
 ├── .gitignore
 └── README.md
 ```
 
 ---
 
-## How to Access and Run
+## How to Use
 
-### Online (Recommended)
-1. Open the [Tableau Public](https://public.tableau.com/) project page in any modern desktop or tablet browser.
-2. Use interactive filters (Season slider, Team dropdown, Position selectors) directly on the canvas.
+### Online
+Open the published workbook on Tableau Public (link coming soon) in any modern browser. No installation required.
 
-### Local (Tableau Desktop)
-1. Clone the repository:
+### Local
+1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/NBA-player-performance-dashboard.git
+   git clone https://github.com/xiaoyang-su/NBA-player-performance-dashboard.git
    ```
-2. Open `tableau/nba_playoff_dashboard.twbx` using Tableau Desktop (v2022.1 or newer).
-3. Connect or refresh the data source extract if updating with recent playoff data.
+2. Open `NBA-player-performance-dashboard.twbx` with Tableau Desktop or Tableau Reader.
+3. Use the Season slider and Player dropdown to explore. Click any mark to trigger cross-filtering.
 
 ---
 
-## Citation and References
+## Related Work
 
-If you use this dashboard, the associated data processing scripts, or the underlying research findings, please cite:
+This dashboard is the visualization layer for the following peer-reviewed study:
 
-```bibtex
-@inproceedings{su2026player,
-  author    = {Su, Xiaoyang and Li, Yanming and Chen, Yiheng and Huang, Xiangyu},
-  title     = {From Player Tracking Data to Impact Quantification: An XGBoost Framework for Playoff BPM Estimation},
-  booktitle = {Proceedings of the 2026 12th International Conference on Computing and Data Engineering (ICCDE 2026)},
-  year      = {2026},
-  doi       = {10.1145/3801839.3801860}
-}
-```
+> Xiaoyang Su, Yanming Li, Yiheng Chen, and Xiangyu Huang. *From Player Tracking Data to Impact Quantification: An XGBoost Framework for Playoff BPM Estimation.* In **ICCDE 2026**, 2026. [DOI: 10.1145/3801839.3801860](https://doi.org/10.1145/3801839.3801860)
+
+The modeling code, data pipeline, and experiment scripts are maintained in a separate repository: [NBA-playoff-data-analysis](https://github.com/xiaoyang-su/NBA-playoff-data-analysis).
 
 ---
 
-<!-- ## Author and Contact
+## Tools
 
-- **Author**: Xiaoyang Su
-- **GitHub**: [github.com/yourusername](https://github.com/yourusername)
-- **Tableau Public**: [public.tableau.com/app/profile/yourusername](https://public.tableau.com/)
-- **Email**: your.email@example.com -->
+- **Visualization**: Tableau Desktop / Tableau Public
+- **Modeling**: Python, scikit-learn, XGBoost
+- **Data processing**: pandas, NumPy
+
+---
+
+## Author
+
+Xiaoyang Su — [GitHub](https://github.com/xiaoyang-su)
